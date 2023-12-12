@@ -98,7 +98,7 @@ export default NavBarDesktop;
 const Nav = styled.nav`
   width: 100%;
   align-items: center;
-  height: 10%;
+  height: 9%;
   padding: 1rem;
   display: flex;
   gap: 3rem;

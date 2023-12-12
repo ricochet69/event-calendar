@@ -100,7 +100,7 @@ export default CalendarGrid;
 const CalendarGridContainer = styled.div`
   display: flex;
   flex-direction: column;
-  height: 85%;
+  height: 88.7%;
 
   @media (max-width: ${({ theme }) => theme.breakpoint.small}) {
     height: 244px;
