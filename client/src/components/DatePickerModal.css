@@ -1,0 +1,83 @@
+/* DatePickerModal.css */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.611);
+  justify-content: center;
+  align-items: center;
+  z-index: 50;
+  /* border: 2px solid red; */
+}
+
+.modal.open {
+  display: flex;
+}
+
+.modal-content {
+  background-color: #fff;
+  border-radius: 8px;
+  width: 350px;
+  height: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.model-header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  /* border: 2px solid blueviolet; */
+  /* background-color: blueviolet; */
+}
+
+.title {
+  width: 50%;
+  text-align: center;
+  padding: 0.5rem;
+}
+
+.scrollContainer {
+  display: flex;
+  width: 100%;
+  height: 70%;
+  /* justify-content: space-between; */
+  /* align-items: center; */
+}
+
+.scrollColumn {
+  overflow: scroll;
+  height: 100%;
+  text-align: center;
+  width: 100%;
+  scroll-snap-type: y mandatory;
+  padding: 0 1rem;
+  border: 2px solid pink;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  overflow-x: hidden;
+}
+
+.scrollColumn::-webkit-scrollbar {
+  /* width: 1px;
+  height: 100%; */
+  display: none;
+}
+
+.item {
+  align-items: center;
+  padding: 0.5rem;
+  background-color: white;
+  border: none;
+  scroll-snap-align: center;
+  scroll-snap-stop: always;
+  font-size: 1.3rem;
+  /* background-color: #aca0ff; */
+}

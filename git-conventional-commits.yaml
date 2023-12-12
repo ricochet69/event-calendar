@@ -1,0 +1,30 @@
+---
+convention:
+  commitTypes:
+    - feat
+    - fix
+    - refactor
+    - style
+    - test
+    - docs
+  commitScopes: []
+  releaseTagGlobPattern: v[0-9]*.[0-9]*.[0-9]*
+changelog:
+  commitTypes:
+    - feat
+    - fix
+    - refactor
+    - style
+    - test
+    - docs
+  includeInvalidCommits: true
+  commitScopes: []
+  commitIgnoreRegexPattern: "^WIP "
+  headlines:
+    feat: Features
+    fix: Bug Fixes
+    breakingChange: BREAKING CHANGES
+  commitUrl: https://github.com/ricochet69/event-calendar.git/commit/%commit%
+  commitRangeUrl: https://github.com/ricochet69/event-calendar.git/compare/%from%...%to%?diff=split
+  issueRegexPattern: "#[0-9]+"
+  issueUrl: https://github.com/ricochet69/event-calendar.git/issues/%issue%
