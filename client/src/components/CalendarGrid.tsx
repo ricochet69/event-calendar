@@ -84,7 +84,11 @@ const CalendarGrid = ({ dateValue, updateAgenda, eventData, autoOpenAgenda }: Ca
                       ))}
 
                   {day.events && day.events.length > 3 && (
-                    <CalendarDayExtraEvents>{`+ ${day.events.length - 3}`}</CalendarDayExtraEvents>
+                    <ExtaEventsContainer>
+                      <CalendarDayExtraEvents>{`+ ${
+                        day.events.length - 3
+                      }`}</CalendarDayExtraEvents>
+                    </ExtaEventsContainer>
                   )}
                 </CalendarDayEvents>
               </CalendarDayContent>
@@ -99,12 +103,8 @@ export default CalendarGrid;
 
 const CalendarGridContainer = styled.div`
   display: flex;
-  flex-direction: column;
-  height: 88.7%;
-
-  @media (max-width: ${({ theme }) => theme.breakpoint.small}) {
-    height: 244px;
-  }
+  flex-grow: 1;
+  height: 100%;
 `;
 
 const CalGrid = styled.div`
@@ -121,7 +121,7 @@ interface CalendarDayButtonProps {
   className?: string;
 }
 
-const CalendarDayButton = styled.button<CalendarDayButtonProps>`
+export const CalendarDayButton = styled.button<CalendarDayButtonProps>`
   cursor: pointer;
   background-color: ${({ theme }) => theme.colors.secondary};
   border: none;
@@ -141,13 +141,11 @@ const CalendarDayButton = styled.button<CalendarDayButtonProps>`
     `}
 
   &:focus-within {
-    border: none;
     outline: 2px solid #ffffff;
     outline-offset: -2px;
   }
 
   &:hover {
-    border: none;
     outline: 2px solid #ffffff;
     outline-offset: -2px;
   }
@@ -167,7 +165,7 @@ interface CalendarDayValueProps {
 }
 
 const CalendarDayValue = styled.h4<CalendarDayValueProps>`
-  font-weight: 600;
+  font-weight: 400;
   margin-top: 0.2rem;
   font-size: 1rem;
   width: 28px;
@@ -181,7 +179,7 @@ const CalendarDayValue = styled.h4<CalendarDayValueProps>`
       border-radius: 5px;
     `};
 
-  @media (max-width: ${({ theme }) => theme.breakpoint.small}) {
+  @media (max-width: 996px) {
     font-size: 0.7rem;
     width: 16.2px;
     height: 16.2px;
@@ -192,21 +190,26 @@ const CalendarDayValue = styled.h4<CalendarDayValueProps>`
 `;
 
 const CalendarDayEvents = styled.div`
-  z-index: 10;
   width: 100%;
   margin-top: 3px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+`;
+
+const ExtaEventsContainer = styled.div`
+  height: 15%;
+  width: 100%;
 `;
 
 const CalendarDayExtraEvents = styled.p`
   font-size: 0.8rem;
-  margin: 4px 0;
-  height: 20px;
+
   color: #a6a6a6;
 
-  @media (max-width: ${({ theme }) => theme.breakpoint.small}) {
+  @media (max-width: ${({ theme }) => theme.breakpoint.medium}) {
     font-size: 0.6rem;
-    margin: 5px 0;
-    height: 10px;
     font-weight: 100;
     display: none;
   }

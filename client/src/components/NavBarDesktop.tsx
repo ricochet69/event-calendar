@@ -8,6 +8,7 @@ import {
   faBars,
   faCalendarDay,
   faAnglesDown,
+  faMagnifyingGlass,
 } from "@fortawesome/free-solid-svg-icons";
 import { IconDefinition } from "@fortawesome/fontawesome-common-types";
 import { CalendarEvent, CalendarGridProps } from "../interfaces/calendarInterfaces";
@@ -32,7 +33,7 @@ const NavBarDesktop = ({
   autoOpenAgenda,
   isSidebarOpen,
 }: CalendarNavProps) => {
-  const { isSmall } = useWindowSize();
+  const { isSmall, isMedium, isLarge } = useWindowSize();
   const changeMonth = (offset: number): void => {
     const { startOfMonth } = processDate(dateValue);
     startOfMonth.setMonth(startOfMonth.getMonth() + offset);
@@ -63,7 +64,14 @@ const NavBarDesktop = ({
           <StyledFontAwesomeIcon iconId={faBars} />
         </Button>
         <DatePicker dateValue={dateValue} openModal={openModal} />
-        {isSmall ? "" : <SearchBar />}
+
+        {isLarge ? (
+          <Button>
+            <StyledFontAwesomeIcon iconId={faMagnifyingGlass} />{" "}
+          </Button>
+        ) : (
+          <SearchBar />
+        )}
 
         <ButtonContainer>
           <Button onClick={() => changeMonth(-1)} aria-label="Select previous month">
@@ -82,13 +90,18 @@ const NavBarDesktop = ({
             <Button onClick={() => getToday(new Date())}>Today</Button>
           )}
         </ButtonContainer>
-        <ToggleSidebar onClick={() => openSidebar()}>
-          {isSidebarOpen ? (
-            <StyledFontAwesomeIcon iconId={faAnglesDown} rotate={"-90deg"} />
-          ) : (
-            <StyledFontAwesomeIcon iconId={faAnglesDown} rotate={"90deg"} />
-          )}
-        </ToggleSidebar>
+
+        {isMedium ? (
+          ""
+        ) : (
+          <ToggleSidebar onClick={() => openSidebar()}>
+            {isSidebarOpen ? (
+              <StyledFontAwesomeIcon iconId={faAnglesDown} rotate={"-90deg"} />
+            ) : (
+              <StyledFontAwesomeIcon iconId={faAnglesDown} rotate={"90deg"} />
+            )}
+          </ToggleSidebar>
+        )}
       </Nav>
     </>
   );
@@ -96,22 +109,15 @@ const NavBarDesktop = ({
 export default NavBarDesktop;
 
 const Nav = styled.nav`
-  width: 100%;
-  align-items: center;
-  height: 9%;
-  padding: 1rem;
   display: flex;
-  gap: 3rem;
+  align-items: center;
+  padding: 0.5rem 1.5rem;
+  width: 100%;
+  gap: 1rem;
 
-  @media (max-width: ${({ theme }) => theme.breakpoint.large}) {
-    padding: 1rem 1rem;
-    gap: 1rem;
-  }
-
-  @media (max-width: ${({ theme }) => theme.breakpoint.small}) {
-    padding: 0.2rem;
-    height: 50px;
-    gap: 1rem;
+  @media (max-width: 1400px) {
+    padding: 0.5rem 0.2rem;
+    gap: 0.5rem;
   }
 `;
 
@@ -119,7 +125,7 @@ const ButtonContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-evenly;
-  gap: 1rem;
+  gap: 0.5rem;
 `;
 
 interface StyledFontAwesomeIconProps {

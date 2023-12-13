@@ -1,5 +1,6 @@
 import styled from "styled-components";
-import useWindowSize from "../hooks/useWindowSize";
+// import useWindowSize from "../hooks/useWindowSize";
+import useResizeObserver from "../hooks/useResizeObserver";
 import { CalendarGridProps } from "../interfaces/calendarInterfaces";
 import { Button } from "./styles/Button.styled";
 
@@ -9,7 +10,8 @@ interface DatePickerProps extends CalendarGridProps {
 }
 
 const DatePicker = ({ dateValue, openModal }: DatePickerProps) => {
-  const { isLarge } = useWindowSize();
+  const { containerRef, hasResized } = useResizeObserver(194);
+  // const { isLarge } = useWindowSize();
 
   const handleOpenModel = () => {
     openModal();
@@ -17,13 +19,14 @@ const DatePicker = ({ dateValue, openModal }: DatePickerProps) => {
 
   return (
     <DateDisplay
+      ref={containerRef}
       onClick={handleOpenModel}
       aria-label={`Calendar month ${dateValue.toLocaleString("en-GB", {
         month: "long",
         year: "numeric",
       })}`}
     >
-      {isLarge
+      {hasResized
         ? dateValue.toLocaleString("en-GB", { month: "short", year: "numeric" })
         : dateValue.toLocaleString("en-GB", { month: "long", year: "numeric" })}
     </DateDisplay>

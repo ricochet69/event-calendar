@@ -6,13 +6,14 @@ import {
   faChevronRight,
   faBars,
   faCalendarDay,
+  faMagnifyingGlass,
 } from "@fortawesome/free-solid-svg-icons";
 import { IconDefinition } from "@fortawesome/fontawesome-common-types";
 import { CalendarEvent, CalendarGridProps } from "../interfaces/calendarInterfaces";
 import processDate from "../utils/processDate";
 import filterEvents from "../utils/filterEvents";
-import SearchBar from "./SearchBar";
-import useWindowSize from "../hooks/useWindowSize";
+// import SearchBar from "./SearchBar";
+// import useWindowSize from "../hooks/useWindowSize";
 import DatePicker from "./DatePicker";
 
 interface CalendarNavProps extends CalendarGridProps {
@@ -20,7 +21,7 @@ interface CalendarNavProps extends CalendarGridProps {
 }
 
 const NavBarMobile = ({ dateValue, updateAgenda, eventData, openModal }: CalendarNavProps) => {
-  const { isSmall } = useWindowSize();
+  // const { isSmall } = useWindowSize();
 
   const changeMonth = (offset: number): void => {
     const { startOfMonth } = processDate(dateValue);
@@ -60,7 +61,9 @@ const NavBarMobile = ({ dateValue, updateAgenda, eventData, openModal }: Calenda
           </Button>
         </DatePickerContainer>
 
-        {isSmall ? "" : <SearchBar />}
+        <Button>
+          <StyledFontAwesomeIcon iconId={faMagnifyingGlass} />{" "}
+        </Button>
 
         <ButtonContainer>
           <Button onClick={() => getToday(new Date())}>

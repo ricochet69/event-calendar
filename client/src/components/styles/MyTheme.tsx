@@ -26,6 +26,7 @@ const MyTheme: DefaultTheme = {
     small: "768px",
     medium: "992px",
     large: "1200px",
+    xLarge: "1400px",
   },
 };
 

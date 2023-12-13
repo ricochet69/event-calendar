@@ -25,8 +25,8 @@ export const Button = styled.button<ButtonProps>`
   font-family: ${({ theme }) => theme.fontFamily.primary};
   font-size: ${({ fontSize }) => (fontSize ? fontSize : "1.2rem")};
   font-weight: ${({ fontWeight }) => fontWeight};
+
   padding: 0.5rem 1.25rem;
-  flex-shrink: 0;
 
   &:hover {
     border: 2px solid #ffffff;
@@ -40,7 +40,12 @@ export const Button = styled.button<ButtonProps>`
     outline-offset: -2px;
   }
 
-  @media (max-width: ${({ theme }) => theme.breakpoint.small}) {
+  /* @media (max-width: ${({ theme }) => theme.breakpoint.small}) {
     font-size: 0.8rem;
+    padding: 0.5rem 0.9rem;
+  } */
+  @media (max-width: 1200px) {
+    font-size: 0.8rem;
+    padding: 0.5rem 0.9rem;
   }
 `;

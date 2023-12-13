@@ -51,16 +51,27 @@ export default CalendarAgenda;
 
 const AgendaContainer = styled.section`
   border-left: 1px solid black;
-  height: 100%;
   overflow: auto;
   padding: 0.5rem 1.5rem;
-  width: 22rem;
-  transition: 2s;
+  flex: 1;
+
+  @media (orientation: portrait) {
+    height: 50vh;
+  }
+
+  @media (orientation: landscape) {
+    flex-wrap: nowrap;
+    height: 100vh;
+  }
+
+  @media (max-width: ${({ theme }) => theme.breakpoint.xLarge}) {
+    /* width: 100%; */
+  }
 `;
 
 const AgendaWeekday = styled.h2`
   text-align: left;
-  font-size: 3rem;
+  font-size: 2rem;
   font-weight: 400;
   color: white;
 `;

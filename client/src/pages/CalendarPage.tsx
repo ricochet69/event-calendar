@@ -8,7 +8,7 @@ import styled from "styled-components";
 import filterEvents from "../utils/filterEvents";
 import processDate from "../utils/processDate";
 import DatePickerModal from "../components/DatePickerModal";
-import NavBarContainer from "../components/NavBarContainer";
+import NavBarDesktop from "../components/NavBarDesktop";
 
 const CalendarPage = () => {
   const [eventData, setEventData] = useState<CalendarEvent[] | undefined>(undefined);
@@ -73,7 +73,7 @@ const CalendarPage = () => {
         <CalendarPageContainer>
           <DatePickerModal isOpen={isModalOpen} onClose={closeModal} />
           <CalendarSection1>
-            <NavBarContainer
+            <NavBarDesktop
               dateValue={date}
               updateAgenda={updateAgenda}
               eventData={eventData}
@@ -104,14 +104,39 @@ export default CalendarPage;
 
 const CalendarPageContainer = styled.div`
   min-height: 100vh;
-  display: flex;
-  flex-wrap: wrap;
+
+  @media (orientation: portrait) {
+    display: block;
+    height: 50vh;
+  }
+
+  @media (orientation: landscape) {
+    display: flex;
+    flex-wrap: nowrap;
+    height: 100vh;
+  }
 `;
 
 const CalendarSection1 = styled.div`
-  flex: 4;
+  display: flex;
+  flex-direction: column;
+  flex: 2;
+
+  @media (orientation: portrait) {
+    height: 50vh;
+  }
+
+  @media (orientation: landscape) {
+    display: flex;
+    flex-wrap: nowrap;
+    height: 100vh;
+  }
+
+  @media (min-width: 1400px) {
+    flex: 4;
+  }
 `;
 
-// const CalendarSection2 = styled.div`
+// const CalendarSection2 = styled.div`;
 //   height: 100vh;
 // `;

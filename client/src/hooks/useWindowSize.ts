@@ -2,12 +2,14 @@ import { useState, useEffect } from "react";
 
 const useWindowSize = () => {
   const [isXSmall, setIsXSmall] = useState(window.innerWidth < 576);
+  const [isXSmallHeight, setIsXSmallHeight] = useState(window.innerHeight < 576);
   const [isSmall, setIsSmall] = useState(window.innerWidth < 768);
   const [isMedium, setIsMedium] = useState(window.innerWidth < 992);
   const [isLarge, setIsLarge] = useState(window.innerWidth < 1200);
 
   const handleResize = () => {
     setIsXSmall(window.innerWidth <= 576);
+    setIsXSmallHeight(window.innerHeight <= 576);
     setIsSmall(window.innerWidth <= 768);
     setIsMedium(window.innerWidth <= 992);
     setIsLarge(window.innerWidth <= 1200);
@@ -21,7 +23,7 @@ const useWindowSize = () => {
     };
   });
 
-  return { isXSmall, isSmall, isMedium, isLarge };
+  return { isXSmall, isXSmallHeight, isSmall, isMedium, isLarge };
 };
 
 export default useWindowSize;

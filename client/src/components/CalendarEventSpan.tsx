@@ -7,7 +7,7 @@ interface EventAndDate extends CalendarEvent {
 }
 
 const CalendarEventSpan = ({ event }: { event: EventAndDate }) => {
-  const { isSmall } = useWindowSize();
+  const { isLarge } = useWindowSize();
   const eventStartDate = new Date(event.start);
   const eventEndDate = new Date(event.end);
   const currentDate = new Date(event.currentDate);
@@ -18,10 +18,10 @@ const CalendarEventSpan = ({ event }: { event: EventAndDate }) => {
       eventEndDate.toDateString() === currentDate.toDateString()
     ) {
       return (
-        <EventSpan className="sameday">{isSmall ? "" : <Title>{event.title}</Title>}</EventSpan>
+        <EventSpan className="sameday">{isLarge ? "" : <Title>{event.title}</Title>}</EventSpan>
       );
     } else if (eventStartDate.toDateString() === currentDate.toDateString()) {
-      return <EventSpan className="start">{isSmall ? "" : <Title>{event.title}</Title>}</EventSpan>;
+      return <EventSpan className="start">{isLarge ? "" : <Title>{event.title}</Title>}</EventSpan>;
     } else if (eventEndDate.toDateString() === currentDate.toDateString()) {
       return <EventSpan className="end"></EventSpan>;
     } else {
@@ -40,8 +40,9 @@ interface EventSpanProps {
 
 const EventSpan = styled.div<EventSpanProps>`
   background-color: #2be0dd;
-  margin: 4px 0;
-  height: 19px;
+  /* margin: 4px 0; */
+  /* height: 19px; */
+  height: 20%;
 
   ${(props) =>
     props.className === "sameday"
@@ -62,14 +63,17 @@ const EventSpan = styled.div<EventSpanProps>`
         `
       : css`
           background-color: #2be0dd;
-          margin: 4px 0;
-          height: 19px;
+          height: 20%;
         `}
 
-  @media (max-width: ${({ theme }) => theme.breakpoint.small}) {
+  @media(max-width: 996px) {
+    /* margin: 2px 0; */
+  }
+
+  /* @media (max-width: ${({ theme }) => theme.breakpoint.large}) {
     height: 3px;
     margin: 2px 0;
-  }
+  } */
 `;
 
 const Title = styled.p`
@@ -89,5 +93,11 @@ const Title = styled.p`
 
   @media (max-width: ${({ theme }) => theme.breakpoint.small}) {
     font-size: 0.8rem;
+  }
+
+  @media (max-width: 1200px) {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 70px;
   }
 `;
