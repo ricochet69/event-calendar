@@ -8,7 +8,8 @@ import styled from "styled-components";
 import filterEvents from "../utils/filterEvents";
 import processDate from "../utils/processDate";
 import DatePickerModal from "../components/DatePickerModal";
-import NavBarDesktop from "../components/NavBarDesktop";
+import NavBar from "../components/NavBar";
+import EventFormModal from "../components/EventFormModal";
 
 const CalendarPage = () => {
   const [eventData, setEventData] = useState<CalendarEvent[] | undefined>(undefined);
@@ -18,8 +19,13 @@ const CalendarPage = () => {
   const [date, setDate] = useState<Date>(new Date());
   const [currentEvents, setCurrentEvents] = useState<CalendarEvent[]>([]);
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isDatePickerOpen, setIsDatePickerOpen] = useState<boolean>(false);
+  const [isEventFormModalOpen, setIsEventFormModalOpen] = useState<boolean>(false);
+  const [isAgendaOpen, setIsAgendaOpen] = useState<boolean>(true);
+  const [isAddNewEvent, setIsAddNewEvent] = useState<boolean>(false);
+
+  // Event state for selected event card
+  const [selectedEventData, setSelectedEventData] = useState<CalendarEvent | undefined>(undefined);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -46,24 +52,30 @@ const CalendarPage = () => {
     fetchData();
   }, []);
 
-  const updateAgenda = (dateSelected: Date, dailyEvents: CalendarEvent[]) => {
-    setDate(dateSelected);
+  // DatePicker Modal
+  const handleDatePickerToggle = () => setIsDatePickerOpen(!isDatePickerOpen);
+
+  // Agenda Sidebar
+  const handleAgendaToggle = () => setIsAgendaOpen(!isAgendaOpen);
+  const handleAgendaAutoOpen = () => setIsAgendaOpen(true);
+  const handleAgendaUpdate = (selectedDate: Date, dailyEvents: CalendarEvent[]) => {
+    setDate(selectedDate);
     setCurrentEvents(dailyEvents);
   };
-
-  // Datepick Modal
-  const openModal = () => {
-    setIsModalOpen(true);
+  const handleAddNewEvent = (value: boolean) => {
+    setIsAddNewEvent(value);
   };
 
-  const closeModal = () => setIsModalOpen(false);
+  // EventForm Modal
+  const handleEventModalToggle = () => setIsEventFormModalOpen(!isEventFormModalOpen);
+  // const handleEventModalClose = () => setIsEventFormModalOpen(false);
 
-  const toggleAgenda = () => {
-    setIsSidebarOpen(!isSidebarOpen);
-    console.log(isSidebarOpen);
+  // Add or view event details
+  const selectEvent = (event: CalendarEvent) => {
+    setSelectedEventData(event);
+    setIsEventFormModalOpen(true);
   };
-
-  const autoOpenAgenda = () => setIsSidebarOpen(true);
+  console.log(isAddNewEvent);
 
   return (
     <>
@@ -71,26 +83,44 @@ const CalendarPage = () => {
 
       {!isloading && !error && (
         <CalendarPageContainer>
-          <DatePickerModal isOpen={isModalOpen} onClose={closeModal} />
+          {isDatePickerOpen && <DatePickerModal handleDatePickerToggle={handleDatePickerToggle} />}
+
+          {isEventFormModalOpen && (
+            <EventFormModal
+              handleEventModalToggle={handleEventModalToggle}
+              date={date}
+              selectedEventData={selectedEventData}
+              isAddNewEvent={isAddNewEvent}
+            />
+          )}
+
           <CalendarSection1>
-            <NavBarDesktop
+            <NavBar
               dateValue={date}
-              updateAgenda={updateAgenda}
+              handleAgendaUpdate={handleAgendaUpdate}
               eventData={eventData}
-              openModal={openModal}
-              toggleAgenda={toggleAgenda}
-              autoOpenAgenda={autoOpenAgenda}
-              isSidebarOpen={isSidebarOpen}
+              handleDatePickerToggle={handleDatePickerToggle}
+              handleAgendaToggle={handleAgendaToggle}
+              handleAgendaAutoOpen={handleAgendaAutoOpen}
+              isAgendaOpen={isAgendaOpen}
             />
             <CalendarGrid
               dateValue={date}
-              updateAgenda={updateAgenda}
+              handleAgendaUpdate={handleAgendaUpdate}
               eventData={eventData}
-              autoOpenAgenda={autoOpenAgenda}
+              handleAgendaAutoOpen={handleAgendaAutoOpen}
             />
           </CalendarSection1>
           {/* <CalendarSection2> */}
-          {isSidebarOpen && <CalendarAgenda dateValue={date} events={currentEvents} />}
+          {isAgendaOpen && (
+            <CalendarAgenda
+              dateValue={date}
+              events={currentEvents}
+              handleEventModalToggle={handleEventModalToggle}
+              selectEvent={selectEvent}
+              handleAddNewEvent={handleAddNewEvent}
+            />
+          )}
 
           {/* </CalendarSection2> */}
         </CalendarPageContainer>

@@ -18,14 +18,20 @@ const CalendarEventSpan = ({ event }: { event: EventAndDate }) => {
       eventEndDate.toDateString() === currentDate.toDateString()
     ) {
       return (
-        <EventSpan className="sameday">{isLarge ? "" : <Title>{event.title}</Title>}</EventSpan>
+        <EventSpan category={event.category.color} className="sameday">
+          {isLarge ? "" : <Title>{event.title}</Title>}
+        </EventSpan>
       );
     } else if (eventStartDate.toDateString() === currentDate.toDateString()) {
-      return <EventSpan className="start">{isLarge ? "" : <Title>{event.title}</Title>}</EventSpan>;
+      return (
+        <EventSpan category={event.category.color} className="start">
+          {isLarge ? "" : <Title>{event.title}</Title>}
+        </EventSpan>
+      );
     } else if (eventEndDate.toDateString() === currentDate.toDateString()) {
-      return <EventSpan className="end"></EventSpan>;
+      return <EventSpan category={event.category.color} className="end"></EventSpan>;
     } else {
-      return <EventSpan className="middle"></EventSpan>;
+      return <EventSpan category={event.category.color} className="middle"></EventSpan>;
     }
   };
 
@@ -36,10 +42,11 @@ export default CalendarEventSpan;
 
 interface EventSpanProps {
   className: string;
+  category: string;
 }
 
 const EventSpan = styled.div<EventSpanProps>`
-  background-color: #2be0dd;
+  background-color: ${({ category }) => category};
   /* margin: 4px 0; */
   /* height: 19px; */
   height: 20%;
@@ -62,7 +69,6 @@ const EventSpan = styled.div<EventSpanProps>`
           border-bottom-right-radius: 8px;
         `
       : css`
-          background-color: #2be0dd;
           height: 20%;
         `}
 

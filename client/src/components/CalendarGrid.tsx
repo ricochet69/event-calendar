@@ -8,10 +8,15 @@ import processDate from "../utils/processDate";
 import CalendarEventSpan from "./CalendarEventSpan";
 
 interface CalenderProps extends CalendarGridProps {
-  autoOpenAgenda: () => void;
+  handleAgendaAutoOpen: () => void;
 }
 
-const CalendarGrid = ({ dateValue, updateAgenda, eventData, autoOpenAgenda }: CalenderProps) => {
+const CalendarGrid = ({
+  dateValue,
+  handleAgendaUpdate,
+  eventData,
+  handleAgendaAutoOpen,
+}: CalenderProps) => {
   const { currentDate, month, firstDayOfMonth, startOfMonth } = processDate(dateValue);
 
   const startOfCalendar: Date = new Date(
@@ -25,7 +30,7 @@ const CalendarGrid = ({ dateValue, updateAgenda, eventData, autoOpenAgenda }: Ca
     const calendarDate: Date = new Date(startOfCalendar);
     calendarDate.setDate(calendarDate.getDate() + i);
 
-    const eventsEachDay = filterEvents({ eventData, filterValue: calendarDate });
+    const dailyEvents = filterEvents({ eventData, filterValue: calendarDate });
 
     // Push final results to calendarDayArray
     if (calendarDate.getMonth() !== month) {
@@ -33,25 +38,24 @@ const CalendarGrid = ({ dateValue, updateAgenda, eventData, autoOpenAgenda }: Ca
         id: i,
         isPadding: true,
         dateValue: calendarDate,
-        events: eventsEachDay,
+        events: dailyEvents,
       });
     } else {
       calendarDayArray.push({
         id: i,
         isPadding: false,
         dateValue: calendarDate,
-        events: eventsEachDay,
+        events: dailyEvents,
       });
     }
   }
 
-  const handleClickedDate = (clickedDate: Date) => {
-    const dateSelected = new Date(clickedDate);
-    console.log("clicked date: ", dateSelected);
-    const todaysEvents = filterEvents({ eventData, filterValue: dateSelected });
-    autoOpenAgenda();
-    if (updateAgenda) {
-      updateAgenda(dateSelected, todaysEvents);
+  const handleClick = (selectedDate: Date) => {
+    const filterDate = new Date(selectedDate);
+    const filteredEvent = filterEvents({ eventData, filterValue: filterDate });
+    handleAgendaAutoOpen();
+    if (handleAgendaUpdate) {
+      handleAgendaUpdate(filterDate, filteredEvent);
     }
   };
 
@@ -64,13 +68,13 @@ const CalendarGrid = ({ dateValue, updateAgenda, eventData, autoOpenAgenda }: Ca
             <CalendarDayButton
               key={day.id}
               className={day.isPadding ? "padding" : ""}
-              onClick={() => handleClickedDate(day.dateValue)}
+              onClick={() => handleClick(day.dateValue)}
               aria-label={generateAriaLabel(day.dateValue)}
             >
               <CalendarDayContent>
-                <CalendarDayValue className={generateDayClassName(day, currentDate)}>
+                <CalendarDateValue className={generateDayClassName(day, currentDate)}>
                   {day.dateValue.getDate()}
-                </CalendarDayValue>
+                </CalendarDateValue>
 
                 <CalendarDayEvents>
                   {day.events &&
@@ -160,11 +164,11 @@ const CalendarDayContent = styled.div`
   outline: none;
 `;
 
-interface CalendarDayValueProps {
+interface CalendarDateValueProps {
   className?: string;
 }
 
-const CalendarDayValue = styled.h4<CalendarDayValueProps>`
+const CalendarDateValue = styled.h4<CalendarDateValueProps>`
   font-weight: 400;
   margin-top: 0.2rem;
   font-size: 1rem;

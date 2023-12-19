@@ -9,7 +9,6 @@ import RegisterPage from "./components/RegisterPage";
 import CalendarPage from "./pages/CalendarPage";
 import "./App.css";
 import SignIn from "./components/SignIn";
-import EventForm from "./components/EventForm";
 
 const App = () => {
   return (
@@ -19,7 +18,7 @@ const App = () => {
         <div className="App">
           <Routes>
             <Route path="/register" element={<RegisterPage />} />
-            <Route path="/add-event" element={<EventForm />} />
+            {/* <Route path="/add-event" element={<EventForm />} /> */}
             <Route path="/calendar" element={<CalendarPage />} />
             <Route path="/" element={<SignIn />} />
           </Routes>

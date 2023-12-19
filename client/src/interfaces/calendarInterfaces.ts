@@ -5,7 +5,10 @@ export interface CalendarEvent {
   title: string;
   description: string;
   createdBy: string;
-  label: string;
+  category: {
+    name: string;
+    color: string;
+  };
 }
 export interface CalendarDay {
   id: number;
@@ -17,5 +20,5 @@ export interface CalendarDay {
 export interface CalendarGridProps {
   dateValue: Date;
   eventData?: CalendarEvent[];
-  updateAgenda?: (dateSelected: Date, dailyEvents: CalendarEvent[]) => void;
+  handleAgendaUpdate?: (dateSelected: Date, dailyEvents: CalendarEvent[]) => void;
 }

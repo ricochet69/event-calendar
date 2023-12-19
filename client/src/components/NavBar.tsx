@@ -1,35 +1,46 @@
 import styled from "styled-components";
 import { Button } from "./styles/Button.styled";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import DatePicker from "./DatePicker";
 import {
   faChevronLeft,
   faChevronRight,
   faBars,
   faCalendarDay,
+  faAnglesDown,
   faMagnifyingGlass,
 } from "@fortawesome/free-solid-svg-icons";
 import { IconDefinition } from "@fortawesome/fontawesome-common-types";
 import { CalendarEvent, CalendarGridProps } from "../interfaces/calendarInterfaces";
 import processDate from "../utils/processDate";
 import filterEvents from "../utils/filterEvents";
-// import SearchBar from "./SearchBar";
-// import useWindowSize from "../hooks/useWindowSize";
-import DatePicker from "./DatePicker";
+import SearchBar from "./SearchBar";
+import useWindowSize from "../hooks/useWindowSize";
 
 interface CalendarNavProps extends CalendarGridProps {
-  openModal: () => void;
+  handleDatePickerToggle: () => void;
+  handleAgendaToggle: () => void;
+  handleAgendaAutoOpen: () => void;
+  isAgendaOpen: boolean;
 }
 
-const NavBarMobile = ({ dateValue, updateAgenda, eventData, openModal }: CalendarNavProps) => {
-  // const { isSmall } = useWindowSize();
-
+const Navbar = ({
+  dateValue,
+  handleAgendaUpdate,
+  eventData,
+  handleDatePickerToggle,
+  handleAgendaToggle,
+  handleAgendaAutoOpen,
+  isAgendaOpen,
+}: CalendarNavProps) => {
+  const { isSmall, isMedium, isLarge } = useWindowSize();
   const changeMonth = (offset: number): void => {
     const { startOfMonth } = processDate(dateValue);
     startOfMonth.setMonth(startOfMonth.getMonth() + offset);
     const todaysEvents: CalendarEvent[] = filterEvents({ eventData, filterValue: startOfMonth });
 
-    if (updateAgenda) {
-      updateAgenda(startOfMonth, todaysEvents);
+    if (handleAgendaUpdate) {
+      handleAgendaUpdate(startOfMonth, todaysEvents);
     }
   };
 
@@ -37,11 +48,14 @@ const NavBarMobile = ({ dateValue, updateAgenda, eventData, openModal }: Calenda
     const { day, month, year } = processDate(today);
     const todaysDate: Date = new Date(year, month, day);
     const todaysEvents: CalendarEvent[] = filterEvents({ eventData, filterValue: todaysDate });
+    handleAgendaAutoOpen();
 
-    if (updateAgenda) {
-      updateAgenda(todaysDate, todaysEvents);
+    if (handleAgendaUpdate) {
+      handleAgendaUpdate(todaysDate, todaysEvents);
     }
   };
+
+  const openSidebar = () => handleAgendaToggle();
 
   return (
     <>
@@ -49,67 +63,74 @@ const NavBarMobile = ({ dateValue, updateAgenda, eventData, openModal }: Calenda
         <Button>
           <StyledFontAwesomeIcon iconId={faBars} />
         </Button>
+        <DatePicker dateValue={dateValue} handleDatePickerToggle={handleDatePickerToggle} />
 
-        <DatePickerContainer>
+        {isLarge ? (
+          <Button>
+            <StyledFontAwesomeIcon iconId={faMagnifyingGlass} />{" "}
+          </Button>
+        ) : (
+          <SearchBar />
+        )}
+
+        <ButtonContainer>
           <Button onClick={() => changeMonth(-1)} aria-label="Select previous month">
             <StyledFontAwesomeIcon iconId={faChevronLeft} />
           </Button>
-          <DatePicker dateValue={dateValue} openModal={openModal} />
 
           <Button onClick={() => changeMonth(1)} aria-label="Select next month">
             <StyledFontAwesomeIcon iconId={faChevronRight} />
           </Button>
-        </DatePickerContainer>
 
-        <Button>
-          <StyledFontAwesomeIcon iconId={faMagnifyingGlass} />{" "}
-        </Button>
-
-        <ButtonContainer>
-          <Button onClick={() => getToday(new Date())}>
-            <StyledFontAwesomeIcon iconId={faCalendarDay} />
-          </Button>
+          {isSmall ? (
+            <Button onClick={() => getToday(new Date())}>
+              <StyledFontAwesomeIcon iconId={faCalendarDay} />
+            </Button>
+          ) : (
+            <Button onClick={() => getToday(new Date())}>Today</Button>
+          )}
         </ButtonContainer>
+
+        {isMedium ? (
+          ""
+        ) : (
+          <ToggleSidebar onClick={() => openSidebar()}>
+            {isAgendaOpen ? (
+              <StyledFontAwesomeIcon iconId={faAnglesDown} rotate={"-90deg"} />
+            ) : (
+              <StyledFontAwesomeIcon iconId={faAnglesDown} rotate={"90deg"} />
+            )}
+          </ToggleSidebar>
+        )}
       </Nav>
     </>
   );
 };
+export default Navbar;
 
-export default NavBarMobile;
-
-// Styles
 const Nav = styled.nav`
-  width: 100%;
-  align-items: center;
-  height: 10%;
-  padding: 1rem 1rem;
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  padding: 0.5rem 1.5rem;
+  width: 100%;
   gap: 1rem;
 
-  @media (max-width: ${({ theme }) => theme.breakpoint.small}) {
-    padding: 0.2rem;
-    height: 50px;
+  @media (max-width: 1400px) {
+    padding: 0.5rem 0.2rem;
     gap: 0.5rem;
   }
-`;
-
-const DatePickerContainer = styled.div`
-  display: flex;
-  gap: 0.5rem;
-  flex: 1;
 `;
 
 const ButtonContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-evenly;
-  gap: 1rem;
+  gap: 0.5rem;
 `;
 
 interface StyledFontAwesomeIconProps {
   iconId: IconDefinition;
+  rotate?: string;
 }
 
 const StyledFontAwesomeIcon = styled(({ iconId, ...props }: StyledFontAwesomeIconProps) => (
@@ -117,8 +138,7 @@ const StyledFontAwesomeIcon = styled(({ iconId, ...props }: StyledFontAwesomeIco
 ))`
   color: white;
   font-size: 1em;
-
-  @media (max-width: ${({ theme }) => theme.breakpoint.small}) {
-    font-size: 1em;
-  }
+  transform: ${({ rotate }) => `rotate(${rotate})`};
 `;
+
+const ToggleSidebar = styled(Button)``;

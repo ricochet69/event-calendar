@@ -7,6 +7,10 @@ const eventData: CalendarEvent[] = [
     title: "Sample Event 1",
     description: "Description for Sample Event 1",
     createdBy: "userName1",
+    category: {
+      name: "Work",
+      color: "#ff00ee",
+    },
   },
   {
     id: 2,
@@ -15,6 +19,10 @@ const eventData: CalendarEvent[] = [
     title: "Sample Event 2",
     description: "Description for Sample Event 2",
     createdBy: "userName1",
+    category: {
+      name: "Personal",
+      color: "#e74c3c",
+    },
   },
   {
     id: 3,
@@ -23,6 +31,10 @@ const eventData: CalendarEvent[] = [
     title: "Sample Event 3",
     description: "Description for Sample Event 3",
     createdBy: "userName1",
+    category: {
+      name: "Meeting",
+      color: "#2ecc71",
+    },
   },
   {
     id: 4,
@@ -31,6 +43,10 @@ const eventData: CalendarEvent[] = [
     title: "Sample Event 4",
     description: "Description for Sample Event 4",
     createdBy: "userName1",
+    category: {
+      name: "Meeting",
+      color: "#2ecc71",
+    },
   },
 
   {
@@ -40,6 +56,10 @@ const eventData: CalendarEvent[] = [
     title: "Sample Event 5",
     description: "Description for Sample Event 5",
     createdBy: "userName1",
+    category: {
+      name: "Birthday",
+      color: "#f39c12",
+    },
   },
   {
     id: 6,
@@ -48,6 +68,10 @@ const eventData: CalendarEvent[] = [
     title: "Sample Event 6",
     description: "This is a description for Sample Event 2",
     createdBy: "userName1",
+    category: {
+      name: "Birthday",
+      color: "#f39c12",
+    },
   },
   {
     id: 7,
@@ -56,6 +80,10 @@ const eventData: CalendarEvent[] = [
     title: "Sample Event 7",
     description: "This is a description for Previous dates",
     createdBy: "userName1",
+    category: {
+      name: "Meeting",
+      color: "#2ecc71",
+    },
   },
   {
     id: 8,
@@ -64,6 +92,10 @@ const eventData: CalendarEvent[] = [
     title: "Sample Event 8",
     description: "This is a description for Previous dates",
     createdBy: "userName1",
+    category: {
+      name: "Meeting",
+      color: "#2ecc71",
+    },
   },
   {
     id: 9,
@@ -72,6 +104,10 @@ const eventData: CalendarEvent[] = [
     title: "Sample Event 9",
     description: "This is a description for Previous dates",
     createdBy: "userName1",
+    category: {
+      name: "Work",
+      color: "#ff00ee",
+    },
   },
   {
     id: 10,
@@ -80,6 +116,10 @@ const eventData: CalendarEvent[] = [
     title: "Sample Event 10",
     description: "This is a description for Previous dates",
     createdBy: "userName1",
+    category: {
+      name: "Work",
+      color: "#ff00ee",
+    },
   },
   {
     id: 11,
@@ -88,6 +128,10 @@ const eventData: CalendarEvent[] = [
     title: "Sample Event 11",
     description: "This is a description for Previous dates",
     createdBy: "userName1",
+    category: {
+      name: "Work",
+      color: "#ff00ee",
+    },
   },
   {
     id: 12,
@@ -96,6 +140,10 @@ const eventData: CalendarEvent[] = [
     title: "Sample Event 12",
     description: "This is a description for Previous dates",
     createdBy: "userName1",
+    category: {
+      name: "Work",
+      color: "#ff00ee",
+    },
   },
   {
     id: 13,
@@ -104,6 +152,10 @@ const eventData: CalendarEvent[] = [
     title: "Sample Event 13",
     description: "This is a description for Previous dates",
     createdBy: "userName1",
+    category: {
+      name: "Work",
+      color: "#ff00ee",
+    },
   },
   {
     id: 14,
@@ -112,6 +164,10 @@ const eventData: CalendarEvent[] = [
     title: "Sample Event 14",
     description: "This is a description for Previous dates",
     createdBy: "userName1",
+    category: {
+      name: "Holiday",
+      color: "#03f7ff",
+    },
   },
   {
     id: 15,
@@ -120,6 +176,10 @@ const eventData: CalendarEvent[] = [
     title: "Sample Event 15",
     description: "This is a description for Previous dates",
     createdBy: "userName1",
+    category: {
+      name: "Holiday",
+      color: "#03f7ff",
+    },
   },
   {
     id: 16,
@@ -128,6 +188,10 @@ const eventData: CalendarEvent[] = [
     title: "Sample Event 16",
     description: "This is a description for Previous dates",
     createdBy: "userName1",
+    category: {
+      name: "Holiday",
+      color: "#03f7ff",
+    },
   },
   {
     id: 17,
@@ -136,6 +200,10 @@ const eventData: CalendarEvent[] = [
     title: "Sample Event 17",
     description: "This is a description for Previous dates",
     createdBy: "userName1",
+    category: {
+      name: "Holiday",
+      color: "#03f7ff",
+    },
   },
 ];
 

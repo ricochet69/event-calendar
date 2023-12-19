@@ -1,13 +1,24 @@
 import { CalendarEvent } from "../../interfaces/calendarInterfaces";
 import styled from "styled-components";
-import "./EventCard.css";
 
-const EventCard = ({ event }: { event: CalendarEvent }) => {
+interface EventCardProps {
+  event: CalendarEvent;
+  selectEvent: (event: CalendarEvent) => void;
+  handleAddNewEvent: (value: boolean) => void;
+}
+
+const EventCard = ({ event, selectEvent, handleAddNewEvent }: EventCardProps) => {
   const eventStart = new Date(event.start).toDateString();
   const eventEnd = new Date(event.end).toDateString();
+
+  const handleClick = (event: CalendarEvent) => {
+    handleAddNewEvent(false);
+    selectEvent(event);
+  };
+
   return (
-    <CardContainer>
-      <CardLabel label={event.label} />
+    <CardContainer onClick={() => handleClick(event)}>
+      <CardCategory category={event.category.color} />
       <CardContent>
         <CardHeader>{event.title}</CardHeader>
         <CardDetails>
@@ -18,9 +29,11 @@ const EventCard = ({ event }: { event: CalendarEvent }) => {
     </CardContainer>
   );
 };
+
 export default EventCard;
 
 const CardContainer = styled.button`
+  cursor: pointer;
   width: 100%;
   border: 1px solid #a6a6a6;
   border: 1px solid #a6a6a697;
@@ -47,12 +60,12 @@ const CardHeader = styled.h3`
   margin-bottom: 0.2rem;
 `;
 
-interface CardLabelProps {
-  label: string;
+interface CardCategoryProps {
+  category: string;
 }
 
-const CardLabel = styled.div<CardLabelProps>`
-  background-color: #2be0dd;
+const CardCategory = styled.div<CardCategoryProps>`
+  background-color: ${({ category }) => category};
   border: 1px solid black;
   width: 5%;
   height: 100%;

@@ -7,6 +7,7 @@ type ButtonProps = {
   color?: string;
   fontSize?: string;
   fontWeight?: string;
+  margin?: string;
 };
 
 export const Button = styled.button<ButtonProps>`

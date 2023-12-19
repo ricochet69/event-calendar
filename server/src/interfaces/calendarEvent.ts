@@ -5,4 +5,8 @@ export interface CalendarEvent {
   title: string;
   description: string;
   createdBy: string;
+  category: {
+    name: string;
+    color: string;
+  };
 }

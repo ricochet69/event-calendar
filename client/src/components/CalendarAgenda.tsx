@@ -10,9 +10,18 @@ import { Button } from "./styles/Button.styled";
 interface CalendarAgendaProps {
   dateValue: Date;
   events: CalendarEvent[];
+  handleEventModalToggle: () => void;
+  selectEvent: (event: CalendarEvent) => void;
+  handleAddNewEvent: (value: boolean) => void;
 }
 
-const CalendarAgenda = ({ dateValue, events }: CalendarAgendaProps) => {
+const CalendarAgenda = ({
+  dateValue,
+  events,
+  handleEventModalToggle,
+  selectEvent,
+  handleAddNewEvent,
+}: CalendarAgendaProps) => {
   const nthNumber = (dateNumber: number) => {
     if (dateNumber > 3 && dateNumber < 21) return "th";
     switch (dateNumber % 10) {
@@ -31,18 +40,30 @@ const CalendarAgenda = ({ dateValue, events }: CalendarAgendaProps) => {
   const monthName = dateValue.toLocaleString("default", { month: "long" });
   const date = `${day}${nthNumber(day)} ${monthName} ${year}`;
 
+  // const selectEvent = (event: CalendarEvent) => selectEvent(event);
+
+  const handleClick = () => {
+    handleAddNewEvent(true);
+    handleEventModalToggle();
+  };
+
   return (
     <AgendaContainer>
       <AgendaWeekday>{weekDay(dateValue)}</AgendaWeekday>
       <AgendaDate>{date}</AgendaDate>
       <AgendaActions>
         <SearchBar />
-        <Button>+</Button>
+        <Button onClick={() => handleClick()}>+</Button>
         {/* <AddEvent /> */}
       </AgendaActions>
 
       {events.map((event) => (
-        <EventCard key={event.id} event={event} />
+        <EventCard
+          key={event.id}
+          event={event}
+          selectEvent={selectEvent}
+          handleAddNewEvent={handleAddNewEvent}
+        />
       ))}
     </AgendaContainer>
   );

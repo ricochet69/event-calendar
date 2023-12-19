@@ -6,15 +6,15 @@ import { Button } from "./styles/Button.styled";
 
 interface DatePickerProps extends CalendarGridProps {
   dateValue: Date;
-  openModal: () => void;
+  handleDatePickerToggle: () => void;
 }
 
-const DatePicker = ({ dateValue, openModal }: DatePickerProps) => {
+const DatePicker = ({ dateValue, handleDatePickerToggle }: DatePickerProps) => {
   const { containerRef, hasResized } = useResizeObserver(194);
   // const { isLarge } = useWindowSize();
 
   const handleOpenModel = () => {
-    openModal();
+    handleDatePickerToggle();
   };
 
   return (
