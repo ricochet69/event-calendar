@@ -4,7 +4,7 @@ import EventCard from "./styles/EventCard";
 import { weekDay } from "../utils/formatDates";
 import styled from "styled-components";
 import processDate from "../utils/processDate";
-import SearchBar from "./SearchBar";
+// import SearchBar from "./SearchBar";
 import { Button } from "./styles/Button.styled";
 
 interface CalendarAgendaProps {
@@ -52,14 +52,16 @@ const CalendarAgenda = ({
       <AgendaWeekday>{weekDay(dateValue)}</AgendaWeekday>
       <AgendaDate>{date}</AgendaDate>
       <AgendaActions>
-        <SearchBar />
-        <Button onClick={() => handleClick()}>+</Button>
+        {/* <SearchBar /> */}
+        <Button type="button" onClick={() => handleClick()}>
+          +
+        </Button>
         {/* <AddEvent /> */}
       </AgendaActions>
 
       {events.map((event) => (
         <EventCard
-          key={event.id}
+          key={event._id}
           event={event}
           selectEvent={selectEvent}
           handleAddNewEvent={handleAddNewEvent}

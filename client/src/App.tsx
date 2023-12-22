@@ -9,6 +9,7 @@ import RegisterPage from "./components/RegisterPage";
 import CalendarPage from "./pages/CalendarPage";
 import "./App.css";
 import SignIn from "./components/SignIn";
+import Search from "./components/Search";
 
 const App = () => {
   return (
@@ -20,6 +21,7 @@ const App = () => {
             <Route path="/register" element={<RegisterPage />} />
             {/* <Route path="/add-event" element={<EventForm />} /> */}
             <Route path="/calendar" element={<CalendarPage />} />
+            {/* <Route path="/search" element={} /> */}
             <Route path="/" element={<SignIn />} />
           </Routes>
         </div>

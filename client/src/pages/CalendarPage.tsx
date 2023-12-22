@@ -19,6 +19,7 @@ const CalendarPage = () => {
   const [date, setDate] = useState<Date>(new Date());
   const [currentEvents, setCurrentEvents] = useState<CalendarEvent[]>([]);
 
+  // Models & sidebars
   const [isDatePickerOpen, setIsDatePickerOpen] = useState<boolean>(false);
   const [isEventFormModalOpen, setIsEventFormModalOpen] = useState<boolean>(false);
   const [isAgendaOpen, setIsAgendaOpen] = useState<boolean>(true);
@@ -30,8 +31,9 @@ const CalendarPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await api.get("/calendar");
+        const response = await api.get("/api/calendar");
         const data = response.data;
+        console.log(data);
         setEventData(data);
 
         const { day, month, year } = processDate(new Date());
@@ -75,8 +77,13 @@ const CalendarPage = () => {
     setSelectedEventData(event);
     setIsEventFormModalOpen(true);
   };
-  console.log(isAddNewEvent);
 
+  const handleUpdateSearch = (selectedSearchDate: String) => {
+    const searchedDate = new Date(selectedSearchDate);
+    const filteredEvents = filterEvents({ eventData, filterValue: searchedDate });
+    setDate(searchedDate);
+    handleAgendaUpdate(searchedDate, filteredEvents);
+  };
   return (
     <>
       {isloading && <div>Loading...</div>}
@@ -103,6 +110,7 @@ const CalendarPage = () => {
               handleAgendaToggle={handleAgendaToggle}
               handleAgendaAutoOpen={handleAgendaAutoOpen}
               isAgendaOpen={isAgendaOpen}
+              handleUpdateSearch={handleUpdateSearch}
             />
             <CalendarGrid
               dateValue={date}

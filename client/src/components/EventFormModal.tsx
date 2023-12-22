@@ -3,6 +3,7 @@ import styled from "styled-components";
 import DateSlider from "./DateSlider";
 import EventCategories from "./EventCategories";
 import { CalendarEvent } from "../interfaces/calendarInterfaces";
+import api from "../components/api/posts";
 
 interface ModalProps {
   handleEventModalToggle: () => void;
@@ -18,15 +19,40 @@ const EventFormModal = ({
   isAddNewEvent,
 }: ModalProps) => {
   const options: Intl.DateTimeFormatOptions = { weekday: "short", day: "numeric", month: "short" };
-  console.log(selectedEventData);
 
   // Form state
+  const eventId: number | undefined = selectedEventData?._id;
+
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("Select category");
+  const [color, setColor] = useState("");
   const [startDate, setStartDate] = useState(date);
   const [endDate, setEndDate] = useState(startDate);
   const [isPending, setIsPending] = useState(false);
+
+  const updateEventObject = {
+    eventId,
+    title,
+    description,
+    start: startDate,
+    end: endDate,
+    category: {
+      name: category,
+      color: color,
+    },
+  };
+
+  const newEventObject = {
+    title,
+    description,
+    start: startDate,
+    end: endDate,
+    category: {
+      name: category,
+      color: color,
+    },
+  };
 
   useEffect(() => {
     // Check if selectedEventData exists
@@ -34,6 +60,8 @@ const EventFormModal = ({
     if (isAddNewEvent === false && selectedEventData) {
       setTitle(selectedEventData.title);
       setDescription(selectedEventData.description);
+      setCategory(selectedEventData.category.name);
+      setColor(selectedEventData.category.color);
       setStartDate(new Date(selectedEventData.start));
       setEndDate(new Date(selectedEventData.end));
     }
@@ -47,9 +75,10 @@ const EventFormModal = ({
 
   const handleCategoryToggle = () => setIsCategoryOpen(!isCategoryOpen);
 
-  const handleCategorySelection = (category: string) => {
+  const handleCategorySelection = (category: string, color: string) => {
     setTimeout(() => {
       setCategory(category);
+      setColor(color);
       setIsCategoryOpen(false);
     }, 200);
   };
@@ -65,24 +94,40 @@ const EventFormModal = ({
   const handleStartDateSelection = (date: Date) => setStartDate(date);
   const handleEndDateSelection = (date: Date) => setEndDate(date);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
-    console.log(startDate);
-
-    const utcDate = new Date(Date.UTC(2023, 11, 15)); // Note: Months are zero-indexed, so December is 11
-    console.log(utcDate.toISOString()); // Outputs: 2023-12-15T00:00:00.000Z
-
+  // Create new Event API Call
+  const handleNewEvent = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
+    try {
+      const response = await api.post(`api/calendar/create/`, newEventObject);
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
-    const event = { title, description, startDate, endDate };
-    console.log(event);
-
-    // setIsPending(true);
-    // Insert API Call
+  // Update Event API CALL
+  const handleUpdateEvent = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    try {
+      const response = await api.put(`api/calendar/update/${eventId}`, updateEventObject);
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const handleDeleteEvent = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    try {
+      const response = await api.delete(`api/calendar/delete/${eventId}`);
+      console.log("event deleted", response);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
     <ModelContainer onClick={(e) => e.target === e.currentTarget && handleClick()}>
-      <EventForm onSubmit={handleSubmit}>
+      <EventForm>
         <EventFormLabel htmlFor="title">Title</EventFormLabel>
         <EventFormInput
           id="title"
@@ -100,21 +145,29 @@ const EventFormModal = ({
         />
         <EventCategoryContainer>
           <EventFormLabel htmlFor="category">Category:</EventFormLabel>
-          <SelectedCategory onClick={() => handleCategoryToggle()}>{category}</SelectedCategory>
+          <SelectedCategory type="button" onClick={() => handleCategoryToggle()}>
+            {category}
+          </SelectedCategory>
         </EventCategoryContainer>
-        {isCategoryOpen && <EventCategories handleCategorySelection={handleCategorySelection} />}
+        {isCategoryOpen && (
+          <EventCategories
+            selectedEventData={selectedEventData}
+            handleCategorySelection={handleCategorySelection}
+            isAddNewEvent={isAddNewEvent}
+          />
+        )}
 
         <DateRangeContainer>
           <DateSelect>
             <EventFormLabel htmlFor="start">Start Date:</EventFormLabel>
-            <button onClick={() => handleStartDateToggle()}>
+            <button type="button" onClick={() => handleStartDateToggle()}>
               {startDate.toLocaleDateString("en-GB", options)}
             </button>
           </DateSelect>
 
           <DateSelect>
             <EventFormLabel htmlFor="endDate">End Date:</EventFormLabel>
-            <button onClick={() => handleEndDateToggle()}>
+            <button type="button" onClick={() => handleEndDateToggle()}>
               {endDate.toLocaleDateString("en-GB", options)}
             </button>
           </DateSelect>
@@ -136,9 +189,25 @@ const EventFormModal = ({
           />
         )}
         {/* Add update and delete buttons for when user selects existing event */}
+        {isAddNewEvent ? (
+          <ButtonContainer>
+            <button type="button" onClick={handleNewEvent}>
+              Add Event
+            </button>
+          </ButtonContainer>
+        ) : (
+          <ButtonContainer>
+            <button type="button" onClick={handleUpdateEvent}>
+              Update
+            </button>
+            <button type="button" onClick={handleDeleteEvent}>
+              Delete
+            </button>
+          </ButtonContainer>
+        )}
 
-        {!isPending && <button>Add Event</button>}
-        {isPending && <button disabled>Adding event...</button>}
+        {/* {!isPending && <button>Add Event</button>}
+        {isPending && <button disabled>Adding event...</button>} */}
       </EventForm>
     </ModelContainer>
   );
@@ -215,4 +284,8 @@ const DateRangeContainer = styled.div`
 const DateSelect = styled.div`
   display: flex;
   flex-direction: column;
+`;
+
+const ButtonContainer = styled.div`
+  display: flex;
 `;

@@ -82,7 +82,7 @@ const CalendarGrid = ({
                       .slice(0, 3)
                       .map((event) => (
                         <CalendarEventSpan
-                          key={event.id}
+                          key={event._id}
                           event={{ ...event, currentDate: day.dateValue }}
                         />
                       ))}

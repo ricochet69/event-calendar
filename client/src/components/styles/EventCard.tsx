@@ -17,7 +17,7 @@ const EventCard = ({ event, selectEvent, handleAddNewEvent }: EventCardProps) =>
   };
 
   return (
-    <CardContainer onClick={() => handleClick(event)}>
+    <CardContainer type="button" onClick={() => handleClick(event)}>
       <CardCategory category={event.category.color} />
       <CardContent>
         <CardHeader>{event.title}</CardHeader>

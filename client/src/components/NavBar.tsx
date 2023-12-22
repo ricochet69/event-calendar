@@ -14,14 +14,16 @@ import { IconDefinition } from "@fortawesome/fontawesome-common-types";
 import { CalendarEvent, CalendarGridProps } from "../interfaces/calendarInterfaces";
 import processDate from "../utils/processDate";
 import filterEvents from "../utils/filterEvents";
-import SearchBar from "./SearchBar";
+// import SearchBar from "./SearchBar";
 import useWindowSize from "../hooks/useWindowSize";
+import Search from "./Search";
 
 interface CalendarNavProps extends CalendarGridProps {
   handleDatePickerToggle: () => void;
   handleAgendaToggle: () => void;
   handleAgendaAutoOpen: () => void;
   isAgendaOpen: boolean;
+  handleUpdateSearch: (selectedSearchDate: Date) => void;
 }
 
 const Navbar = ({
@@ -32,6 +34,7 @@ const Navbar = ({
   handleAgendaToggle,
   handleAgendaAutoOpen,
   isAgendaOpen,
+  handleUpdateSearch,
 }: CalendarNavProps) => {
   const { isSmall, isMedium, isLarge } = useWindowSize();
   const changeMonth = (offset: number): void => {
@@ -70,7 +73,7 @@ const Navbar = ({
             <StyledFontAwesomeIcon iconId={faMagnifyingGlass} />{" "}
           </Button>
         ) : (
-          <SearchBar />
+          <Search handleUpdateSearch={handleUpdateSearch} />
         )}
 
         <ButtonContainer>
