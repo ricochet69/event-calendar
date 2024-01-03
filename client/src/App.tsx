@@ -9,7 +9,7 @@ import RegisterPage from "./components/RegisterPage";
 import CalendarPage from "./pages/CalendarPage";
 import "./App.css";
 import SignIn from "./components/SignIn";
-import Search from "./components/Search";
+// import Search from "./components/Search";
 
 const App = () => {
   return (

@@ -1,7 +1,15 @@
+import { CalendarEvent, CalendarGridProps } from "../interfaces/calendarInterfaces";
 import styled from "styled-components";
-import { Button } from "./styles/Button.styled";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
+import processDate from "../utils/processDate";
+import filterEvents from "../utils/filterEvents";
+import useWindowSize from "../hooks/useWindowSize";
+
 import DatePicker from "./DatePicker";
+
+import { Button } from "./styles/Button.styled";
+import { IconDefinition } from "@fortawesome/fontawesome-common-types";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faChevronLeft,
   faChevronRight,
@@ -10,13 +18,7 @@ import {
   faAnglesDown,
   faMagnifyingGlass,
 } from "@fortawesome/free-solid-svg-icons";
-import { IconDefinition } from "@fortawesome/fontawesome-common-types";
-import { CalendarEvent, CalendarGridProps } from "../interfaces/calendarInterfaces";
-import processDate from "../utils/processDate";
-import filterEvents from "../utils/filterEvents";
-// import SearchBar from "./SearchBar";
-import useWindowSize from "../hooks/useWindowSize";
-import Search from "./Search";
+import EventSearchBar from "./EventSearchBar";
 
 interface CalendarNavProps extends CalendarGridProps {
   handleDatePickerToggle: () => void;
@@ -73,7 +75,7 @@ const Navbar = ({
             <StyledFontAwesomeIcon iconId={faMagnifyingGlass} />{" "}
           </Button>
         ) : (
-          <Search handleUpdateSearch={handleUpdateSearch} />
+          <EventSearchBar handleUpdateSearch={handleUpdateSearch} />
         )}
 
         <ButtonContainer>

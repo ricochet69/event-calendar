@@ -70,7 +70,6 @@ const CalendarPage = () => {
 
   // EventForm Modal
   const handleEventModalToggle = () => setIsEventFormModalOpen(!isEventFormModalOpen);
-  // const handleEventModalClose = () => setIsEventFormModalOpen(false);
 
   // Add or view event details
   const selectEvent = (event: CalendarEvent) => {
@@ -78,7 +77,7 @@ const CalendarPage = () => {
     setIsEventFormModalOpen(true);
   };
 
-  const handleUpdateSearch = (selectedSearchDate: String) => {
+  const handleUpdateSearch = (selectedSearchDate: Date) => {
     const searchedDate = new Date(selectedSearchDate);
     const filteredEvents = filterEvents({ eventData, filterValue: searchedDate });
     setDate(searchedDate);
@@ -174,7 +173,3 @@ const CalendarSection1 = styled.div`
     flex: 4;
   }
 `;
-
-// const CalendarSection2 = styled.div`;
-//   height: 100vh;
-// `;
