@@ -6,7 +6,7 @@ import CalendarAgenda from "../components/CalendarAgenda";
 import { CalendarEvent } from "../interfaces/calendarInterfaces";
 import styled from "styled-components";
 import filterEvents from "../utils/filterEvents";
-import processDate from "../utils/processDate";
+import processDate from "../utils/processDateValue";
 import DatePickerModal from "../components/DatePickerModal";
 import NavBar from "../components/NavBar";
 import EventFormModal from "../components/EventFormModal";

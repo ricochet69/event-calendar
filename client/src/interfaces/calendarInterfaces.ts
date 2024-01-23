@@ -1,4 +1,4 @@
-export interface CalendarEvent {
+export interface Event {
   _id: number;
   start: Date;
   end: Date;
@@ -9,16 +9,17 @@ export interface CalendarEvent {
     name: string;
     color: string;
   };
+  gridIndex?: number;
 }
 export interface CalendarDay {
   id: number;
   isPadding: boolean;
   dateValue: Date;
-  events?: CalendarEvent[];
+  events?: Event[];
 }
 
 export interface CalendarGridProps {
   dateValue: Date;
-  eventData?: CalendarEvent[];
-  handleAgendaUpdate?: (dateSelected: Date, dailyEvents: CalendarEvent[]) => void;
+  eventData?: Event[];
+  handleAgendaUpdate?: (dateSelected: Date, dailyEvents: Event[]) => void;
 }

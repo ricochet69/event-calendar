@@ -3,7 +3,7 @@ import EventCard from "./styles/EventCard";
 
 import { weekDay } from "../utils/formatDates";
 import styled from "styled-components";
-import processDate from "../utils/processDate";
+import processDate from "../utils/processDateValue";
 // import SearchBar from "./SearchBar";
 import { Button } from "./styles/Button.styled";
 

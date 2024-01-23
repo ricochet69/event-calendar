@@ -1,4 +1,4 @@
-const processDate = (dateValue: Date) => {
+const processDateValue = (dateValue: Date) => {
   const currentDate: Date = new Date();
   const day: number = dateValue.getDate();
   const month: number = dateValue.getMonth();
@@ -9,4 +9,4 @@ const processDate = (dateValue: Date) => {
   return { currentDate, day, month, year, firstDayOfMonth, startOfMonth };
 };
 
-export default processDate;
+export default processDateValue;

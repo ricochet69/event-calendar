@@ -1,7 +1,7 @@
 import { CalendarEvent, CalendarGridProps } from "../interfaces/calendarInterfaces";
 import styled from "styled-components";
 
-import processDate from "../utils/processDate";
+import processDate from "../utils/processDateValue";
 import filterEvents from "../utils/filterEvents";
 import useWindowSize from "../hooks/useWindowSize";
 
