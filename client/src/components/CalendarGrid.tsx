@@ -1,220 +1,132 @@
-import { CalendarGridProps, CalendarDay } from "../interfaces/calendarInterfaces";
-import styled, { css } from "styled-components";
+import * as S from "../components/styles/CalendarGrid.styles";
+import { CalendarGridProps, CalendarDay, Event } from "../interfaces/calendarInterfaces";
+import { DateValues } from "../interfaces/dateValuesInterface";
+
+import generateClassName from "../utils/generateClassName";
 import generateAriaLabel from "../utils/generateAriaLabel";
-import DaysOfWeek from "./DaysOfWeek";
-import generateDayClassName from "../utils/generateDayClassName";
-import filterEvents from "../utils/filterEvents";
-import processDate from "../utils/processDate";
-import CalendarEventSpan from "./CalendarEventSpan";
+import processDateValue from "../utils/processDateValue";
+
+import DaysOfWeek from "./WeekDays";
+import EventItem from "./EventItem";
 
 interface CalenderProps extends CalendarGridProps {
   handleAgendaAutoOpen: () => void;
 }
 
-const CalendarGrid = ({
-  dateValue,
-  handleAgendaUpdate,
-  eventData,
-  handleAgendaAutoOpen,
-}: CalenderProps) => {
-  const { currentDate, month, firstDayOfMonth, startOfMonth } = processDate(dateValue);
-
-  const startOfCalendar: Date = new Date(
-    startOfMonth.setDate(startOfMonth.getDate() - firstDayOfMonth)
-  );
-
-  // Generate calendar values
+const CalendarGrid = (props: CalenderProps) => {
+  const dateValues = processDateValue(props.dateValue);
+  const eventsArray: Event[] | undefined = props.eventData;
   const calendarDayArray: CalendarDay[] = [];
 
+  const getStartDate = (dateValues: DateValues) => {
+    return new Date(
+      dateValues.startOfMonth.setDate(
+        dateValues.startOfMonth.getDate() - dateValues.firstDayOfMonth
+      )
+    );
+  };
+
+  const getCalendarDate = (startOfCalendar: Date, loopIndex: number): Date => {
+    const calendarDate = new Date(startOfCalendar);
+    calendarDate.setDate(calendarDate.getDate() + loopIndex);
+    return calendarDate;
+  };
+
+  const filterEventsByDate = (eventsArray: Event[], filterValue: Date) => {
+    return eventsArray.filter((event) => {
+      const eventStartDate = new Date(event.start);
+      const eventEndDate = new Date(event.end);
+      return eventStartDate <= filterValue && eventEndDate >= filterValue;
+    });
+  };
+
+  const sortEventsByStartDate = (events: Event[]): Event[] => {
+    return events.sort((a: Event, b: Event) => {
+      return new Date(a.start).getTime() - new Date(b.start).getTime();
+    });
+  };
+
+  const assignGridIndex = (sortedEvents: Event[]) => {
+    if (eventsArray) {
+      for (const event of sortedEvents) {
+        const indexOfEvent = eventsArray.findIndex((e) => e._id === event._id ?? -1);
+
+        if (indexOfEvent !== -1) {
+          const currentEvent = eventsArray[indexOfEvent];
+
+          if (!currentEvent.gridIndex && currentEvent.start !== currentEvent.end) {
+            currentEvent.gridIndex = sortedEvents.indexOf(event) + 1;
+          }
+        }
+      }
+    }
+  };
+
+  const startOfCalendar = getStartDate(dateValues);
+
   for (let i = 0; i < 42; i++) {
-    const calendarDate: Date = new Date(startOfCalendar);
-    calendarDate.setDate(calendarDate.getDate() + i);
+    if (eventsArray) {
+      const calendarDate = getCalendarDate(startOfCalendar, i);
+      const filteredEvents = filterEventsByDate(eventsArray, calendarDate);
+      const sortedEvents = sortEventsByStartDate(filteredEvents);
 
-    const dailyEvents = filterEvents({ eventData, filterValue: calendarDate });
+      assignGridIndex(sortedEvents);
 
-    // Push final results to calendarDayArray
-    if (calendarDate.getMonth() !== month) {
-      calendarDayArray.push({
-        id: i,
-        isPadding: true,
-        dateValue: calendarDate,
-        events: dailyEvents,
-      });
-    } else {
-      calendarDayArray.push({
-        id: i,
-        isPadding: false,
-        dateValue: calendarDate,
-        events: dailyEvents,
-      });
+      if (calendarDate.getMonth() !== dateValues.month) {
+        calendarDayArray.push({
+          id: i,
+          isPadding: true,
+          dateValue: calendarDate,
+          events: sortedEvents,
+        });
+      } else {
+        calendarDayArray.push({
+          id: i,
+          isPadding: false,
+          dateValue: calendarDate,
+          events: sortedEvents,
+        });
+      }
     }
   }
 
   const handleClick = (selectedDate: Date) => {
     const filterDate = new Date(selectedDate);
-    const filteredEvent = filterEvents({ eventData, filterValue: filterDate });
-    handleAgendaAutoOpen();
-    if (handleAgendaUpdate) {
-      handleAgendaUpdate(filterDate, filteredEvent);
+    if (!eventsArray) {
+      return;
+    }
+    const filteredEvents = filterEventsByDate(eventsArray, selectedDate);
+    props.handleAgendaAutoOpen();
+    if (props.handleAgendaUpdate) {
+      props.handleAgendaUpdate(filterDate, filteredEvents);
     }
   };
 
   return (
     <>
       <DaysOfWeek />
-      <CalendarGridContainer>
-        <CalGrid>
+      <S.Container>
+        <S.Grid>
           {calendarDayArray.map((day) => (
-            <CalendarDayButton
+            <S.GridButton
               key={day.id}
               className={day.isPadding ? "padding" : ""}
               onClick={() => handleClick(day.dateValue)}
               aria-label={generateAriaLabel(day.dateValue)}
             >
-              <CalendarDayContent>
-                <CalendarDateValue className={generateDayClassName(day, currentDate)}>
+              <S.Content>
+                <S.DateHeading className={generateClassName(day, dateValues.currentDate)}>
                   {day.dateValue.getDate()}
-                </CalendarDateValue>
-
-                <CalendarDayEvents>
-                  {day.events &&
-                    day.events
-                      .slice(0, 3)
-                      .map((event) => (
-                        <CalendarEventSpan
-                          key={event._id}
-                          event={{ ...event, currentDate: day.dateValue }}
-                        />
-                      ))}
-
-                  {day.events && day.events.length > 3 && (
-                    <ExtaEventsContainer>
-                      <CalendarDayExtraEvents>{`+ ${
-                        day.events.length - 3
-                      }`}</CalendarDayExtraEvents>
-                    </ExtaEventsContainer>
-                  )}
-                </CalendarDayEvents>
-              </CalendarDayContent>
-            </CalendarDayButton>
+                </S.DateHeading>
+                <S.EventsGrid>
+                  {day.events && <EventItem events={day.events} dateValue={day.dateValue} />}
+                </S.EventsGrid>
+              </S.Content>
+            </S.GridButton>
           ))}
-        </CalGrid>
-      </CalendarGridContainer>
+        </S.Grid>
+      </S.Container>
     </>
   );
 };
 export default CalendarGrid;
-
-const CalendarGridContainer = styled.div`
-  display: flex;
-  flex-grow: 1;
-  height: 100%;
-`;
-
-const CalGrid = styled.div`
-  flex-grow: 1;
-  display: grid;
-  grid-template-rows: repeat(6, 1fr);
-  grid-template-columns: repeat(7, 1fr);
-  text-align: center;
-  color: ${({ theme }) => theme.colors.textPrimary};
-  background-color: ${({ theme }) => theme.colors.secondary};
-`;
-
-interface CalendarDayButtonProps {
-  className?: string;
-}
-
-export const CalendarDayButton = styled.button<CalendarDayButtonProps>`
-  cursor: pointer;
-  background-color: ${({ theme }) => theme.colors.secondary};
-  border: none;
-  color: inherit;
-  font-size: 0.8rem;
-  z-index: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  border-bottom: 1px solid #191922;
-
-  ${(props) =>
-    props.className &&
-    css`
-      pointer-events: none;
-      opacity: 0.3;
-    `}
-
-  &:focus-within {
-    outline: 2px solid #ffffff;
-    outline-offset: -2px;
-  }
-
-  &:hover {
-    outline: 2px solid #ffffff;
-    outline-offset: -2px;
-  }
-`;
-
-const CalendarDayContent = styled.div`
-  width: 100%;
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  outline: none;
-`;
-
-interface CalendarDateValueProps {
-  className?: string;
-}
-
-const CalendarDateValue = styled.h4<CalendarDateValueProps>`
-  font-weight: 400;
-  margin-top: 0.2rem;
-  font-size: 1rem;
-  width: 28px;
-  height: 28px;
-  line-height: 28px;
-  ${(props) =>
-    props.className &&
-    css`
-      background-color: red;
-      color: white;
-      border-radius: 5px;
-    `};
-
-  @media (max-width: 996px) {
-    font-size: 0.7rem;
-    width: 16.2px;
-    height: 16.2px;
-    line-height: 17.2px;
-    margin-top: 0.1rem;
-    font-weight: 100;
-  }
-`;
-
-const CalendarDayEvents = styled.div`
-  width: 100%;
-  margin-top: 3px;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
-`;
-
-const ExtaEventsContainer = styled.div`
-  height: 15%;
-  width: 100%;
-`;
-
-const CalendarDayExtraEvents = styled.p`
-  font-size: 0.8rem;
-
-  color: #a6a6a6;
-
-  @media (max-width: ${({ theme }) => theme.breakpoint.medium}) {
-    font-size: 0.6rem;
-    font-weight: 100;
-    display: none;
-  }
-`;
