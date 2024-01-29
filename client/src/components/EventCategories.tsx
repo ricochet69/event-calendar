@@ -1,18 +1,19 @@
 import styled from "styled-components";
-import { CalendarEvent } from "../interfaces/calendarInterfaces";
+import { Event } from "../interfaces/calendarInterfaces";
 import { useEffect, useState, useMemo } from "react";
+import { useAppContext } from "../hooks/useAppContext";
 
 interface EventCategoriesProps {
   handleCategorySelection: (category: string, color: string) => void;
-  selectedEventData: CalendarEvent | undefined;
-  isAddNewEvent: boolean;
+  selectedEventData: Event | undefined;
+  // isAddNewEvent: boolean;
 }
 
 const EventCategories = ({
   handleCategorySelection,
-  selectedEventData,
-  isAddNewEvent,
+  selectedEventData, // isAddNewEvent,
 }: EventCategoriesProps) => {
+  const { appState } = useAppContext();
   const eventCategories = useMemo(
     () => [
       { id: 1, name: "Work", color: "#ff00ee" },
@@ -27,12 +28,12 @@ const EventCategories = ({
   const [checkedCategory, setCheckedCategory] = useState<string | null>(null);
 
   useEffect(() => {
-    if (isAddNewEvent === false && selectedEventData) {
+    if (appState.isAddNewEvent === false && selectedEventData) {
       setCheckedCategory(selectedEventData.category.name);
     } else {
       setCheckedCategory(null);
     }
-  }, [isAddNewEvent, selectedEventData]);
+  }, [appState.isAddNewEvent, selectedEventData]);
 
   const handleCheckboxChange = (name: string, color: string) => {
     handleCategorySelection(name, color);

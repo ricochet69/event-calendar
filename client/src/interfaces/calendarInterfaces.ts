@@ -19,7 +19,6 @@ export interface CalendarDay {
 }
 
 export interface CalendarGridProps {
-  dateValue: Date;
   eventData?: Event[];
   handleAgendaUpdate?: (dateSelected: Date, dailyEvents: Event[]) => void;
 }

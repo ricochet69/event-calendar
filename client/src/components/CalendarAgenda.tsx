@@ -1,4 +1,4 @@
-import { CalendarEvent } from "../interfaces/calendarInterfaces";
+import { Event } from "../interfaces/calendarInterfaces";
 import EventCard from "./styles/EventCard";
 
 import { weekDay } from "../utils/formatDates";
@@ -6,22 +6,18 @@ import styled from "styled-components";
 import processDate from "../utils/processDateValue";
 // import SearchBar from "./SearchBar";
 import { Button } from "./styles/Button.styled";
+import { useAppContext } from "../hooks/useAppContext";
 
 interface CalendarAgendaProps {
-  dateValue: Date;
-  events: CalendarEvent[];
+  // events: Event[];
   handleEventModalToggle: () => void;
-  selectEvent: (event: CalendarEvent) => void;
-  handleAddNewEvent: (value: boolean) => void;
+  selectEvent: (event: Event) => void;
 }
 
-const CalendarAgenda = ({
-  dateValue,
-  events,
-  handleEventModalToggle,
-  selectEvent,
-  handleAddNewEvent,
-}: CalendarAgendaProps) => {
+const CalendarAgenda = ({ handleEventModalToggle, selectEvent }: CalendarAgendaProps) => {
+  const { appState, appDispatch } = useAppContext();
+  console.log(appState.date);
+
   const nthNumber = (dateNumber: number) => {
     if (dateNumber > 3 && dateNumber < 21) return "th";
     switch (dateNumber % 10) {
@@ -36,20 +32,20 @@ const CalendarAgenda = ({
     }
   };
 
-  const { day, year } = processDate(dateValue);
-  const monthName = dateValue.toLocaleString("default", { month: "long" });
+  const { day, year } = processDate(appState.date);
+  const monthName = appState.date.toLocaleString("default", { month: "long" });
   const date = `${day}${nthNumber(day)} ${monthName} ${year}`;
 
-  // const selectEvent = (event: CalendarEvent) => selectEvent(event);
+  // const selectEvent = (event: Event) => selectEvent(event);
 
   const handleClick = () => {
-    handleAddNewEvent(true);
+    appDispatch({ type: "SET_ADD_NEW_EVENT", payload: (appState.isAddNewEvent = true) });
     handleEventModalToggle();
   };
 
   return (
     <AgendaContainer>
-      <AgendaWeekday>{weekDay(dateValue)}</AgendaWeekday>
+      <AgendaWeekday>{weekDay(appState.date)}</AgendaWeekday>
       <AgendaDate>{date}</AgendaDate>
       <AgendaActions>
         {/* <SearchBar /> */}
@@ -59,13 +55,8 @@ const CalendarAgenda = ({
         {/* <AddEvent /> */}
       </AgendaActions>
 
-      {events.map((event) => (
-        <EventCard
-          key={event._id}
-          event={event}
-          selectEvent={selectEvent}
-          handleAddNewEvent={handleAddNewEvent}
-        />
+      {appState.currentEvents.map((event) => (
+        <EventCard key={event._id} event={event} selectEvent={selectEvent} />
       ))}
     </AgendaContainer>
   );

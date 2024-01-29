@@ -1,4 +1,4 @@
-import { CalendarEvent, CalendarGridProps } from "../interfaces/calendarInterfaces";
+import { Event, CalendarGridProps } from "../interfaces/calendarInterfaces";
 import styled from "styled-components";
 
 import processDate from "../utils/processDateValue";
@@ -19,48 +19,70 @@ import {
   faMagnifyingGlass,
 } from "@fortawesome/free-solid-svg-icons";
 import EventSearchBar from "./EventSearchBar";
+import { useAppContext } from "../hooks/useAppContext";
 
 interface CalendarNavProps extends CalendarGridProps {
   handleDatePickerToggle: () => void;
-  handleAgendaToggle: () => void;
-  handleAgendaAutoOpen: () => void;
-  isAgendaOpen: boolean;
   handleUpdateSearch: (selectedSearchDate: Date) => void;
 }
 
 const Navbar = ({
-  dateValue,
-  handleAgendaUpdate,
-  eventData,
+  // handleAgendaUpdate,
+  // eventData,
   handleDatePickerToggle,
-  handleAgendaToggle,
-  handleAgendaAutoOpen,
-  isAgendaOpen,
   handleUpdateSearch,
 }: CalendarNavProps) => {
   const { isSmall, isMedium, isLarge } = useWindowSize();
-  const changeMonth = (offset: number): void => {
-    const { startOfMonth } = processDate(dateValue);
-    startOfMonth.setMonth(startOfMonth.getMonth() + offset);
-    const todaysEvents: CalendarEvent[] = filterEvents({ eventData, filterValue: startOfMonth });
+  const { appState, appDispatch } = useAppContext();
 
-    if (handleAgendaUpdate) {
-      handleAgendaUpdate(startOfMonth, todaysEvents);
-    }
+  const changeMonth = (offset: number): void => {
+    const { startOfMonth } = processDate(appState.date);
+
+    appDispatch({
+      type: "SET_DATE",
+      payload: new Date(startOfMonth.setMonth(startOfMonth.getMonth() + offset)),
+    });
+
+    const todaysEvents: Event[] = filterEvents({
+      eventData: appState.events,
+      filterValue: startOfMonth,
+    });
+
+    // if (handleAgendaUpdate) {
+    //   handleAgendaUpdate(startOfMonth, todaysEvents);
+    // }
+
+    appDispatch({ type: "SET_DATE", payload: startOfMonth });
+    appDispatch({ type: "SET_CURRENT_EVENTS", payload: todaysEvents });
   };
 
   const getToday = (today: Date) => {
     const { day, month, year } = processDate(today);
     const todaysDate: Date = new Date(year, month, day);
-    const todaysEvents: CalendarEvent[] = filterEvents({ eventData, filterValue: todaysDate });
-    handleAgendaAutoOpen();
+    appDispatch({
+      type: "SET_DATE",
+      payload: todaysDate,
+    });
+    const todaysEvents: Event[] = filterEvents({
+      eventData: appState.events,
+      filterValue: todaysDate,
+    });
 
-    if (handleAgendaUpdate) {
-      handleAgendaUpdate(todaysDate, todaysEvents);
-    }
+    appDispatch({
+      type: "TOGGLE_AGENDA",
+      payload: (appState.isAgendaOpen = true),
+    });
+
+    appDispatch({ type: "SET_DATE", payload: todaysDate });
+    appDispatch({ type: "SET_CURRENT_EVENTS", payload: todaysEvents });
   };
 
-  const openSidebar = () => handleAgendaToggle();
+  const openAgenda = () => {
+    appDispatch({
+      type: "TOGGLE_AGENDA",
+    });
+    console.log(appState.isAgendaOpen);
+  };
 
   return (
     <>
@@ -68,7 +90,7 @@ const Navbar = ({
         <Button>
           <StyledFontAwesomeIcon iconId={faBars} />
         </Button>
-        <DatePicker dateValue={dateValue} handleDatePickerToggle={handleDatePickerToggle} />
+        <DatePicker dateValue={appState.date} handleDatePickerToggle={handleDatePickerToggle} />
 
         {isLarge ? (
           <Button>
@@ -99,8 +121,8 @@ const Navbar = ({
         {isMedium ? (
           ""
         ) : (
-          <ToggleSidebar onClick={() => openSidebar()}>
-            {isAgendaOpen ? (
+          <ToggleSidebar onClick={() => openAgenda()}>
+            {appState.isAgendaOpen ? (
               <StyledFontAwesomeIcon iconId={faAnglesDown} rotate={"-90deg"} />
             ) : (
               <StyledFontAwesomeIcon iconId={faAnglesDown} rotate={"90deg"} />

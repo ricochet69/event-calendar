@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import api from "./api/posts";
+import api from "../services/api";
 import styled from "styled-components";
 import { CalendarEvent } from "../interfaces/calendarInterfaces";
 import useDebounce from "../hooks/useDebounce";

@@ -2,23 +2,19 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import DateSlider from "./DateSlider";
 import EventCategories from "./EventCategories";
-import { CalendarEvent } from "../interfaces/calendarInterfaces";
-import api from "../components/api/posts";
+import { Event } from "../interfaces/calendarInterfaces";
+import api from "../services/api";
+import { useAppContext } from "../hooks/useAppContext";
 
 interface ModalProps {
   handleEventModalToggle: () => void;
-  date: Date;
-  selectedEventData: CalendarEvent | undefined;
-  isAddNewEvent: boolean;
+  selectedEventData: Event | undefined;
 }
 
-const EventFormModal = ({
-  handleEventModalToggle,
-  date,
-  selectedEventData,
-  isAddNewEvent,
-}: ModalProps) => {
+const EventFormModal = ({ handleEventModalToggle, selectedEventData }: ModalProps) => {
   const options: Intl.DateTimeFormatOptions = { weekday: "short", day: "numeric", month: "short" };
+
+  const { appState } = useAppContext();
 
   // Form state
   const eventId: number | undefined = selectedEventData?._id;
@@ -27,7 +23,7 @@ const EventFormModal = ({
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("Select category");
   const [color, setColor] = useState("");
-  const [startDate, setStartDate] = useState(date);
+  const [startDate, setStartDate] = useState(appState.date);
   const [endDate, setEndDate] = useState(startDate);
   const [isPending, setIsPending] = useState(false);
 
@@ -57,7 +53,7 @@ const EventFormModal = ({
   useEffect(() => {
     // Check if selectedEventData exists
     // If new event == False render below
-    if (isAddNewEvent === false && selectedEventData) {
+    if (appState.isAddNewEvent === false && selectedEventData) {
       setTitle(selectedEventData.title);
       setDescription(selectedEventData.description);
       setCategory(selectedEventData.category.name);
@@ -65,7 +61,7 @@ const EventFormModal = ({
       setStartDate(new Date(selectedEventData.start));
       setEndDate(new Date(selectedEventData.end));
     }
-  }, [isAddNewEvent, selectedEventData]);
+  }, [appState.isAddNewEvent, selectedEventData]);
 
   const [isStartSliderOpen, setIsStartSliderOpen] = useState(false);
   const [isEndSliderOpen, setIsEndSliderOpen] = useState(false);
@@ -153,7 +149,6 @@ const EventFormModal = ({
           <EventCategories
             selectedEventData={selectedEventData}
             handleCategorySelection={handleCategorySelection}
-            isAddNewEvent={isAddNewEvent}
           />
         )}
 
@@ -189,7 +184,7 @@ const EventFormModal = ({
           />
         )}
         {/* Add update and delete buttons for when user selects existing event */}
-        {isAddNewEvent ? (
+        {appState.isAddNewEvent ? (
           <ButtonContainer>
             <button type="button" onClick={handleNewEvent}>
               Add Event

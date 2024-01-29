@@ -1,5 +1,5 @@
 import * as S from "../components/styles/CalendarGrid.styles";
-import { CalendarGridProps, CalendarDay, Event } from "../interfaces/calendarInterfaces";
+import { CalendarDay, Event } from "../interfaces/calendarInterfaces";
 import { DateValues } from "../interfaces/dateValuesInterface";
 
 import generateClassName from "../utils/generateClassName";
@@ -8,14 +8,14 @@ import processDateValue from "../utils/processDateValue";
 
 import DaysOfWeek from "./WeekDays";
 import EventItem from "./EventItem";
+import { useAppContext } from "../hooks/useAppContext";
 
-interface CalenderProps extends CalendarGridProps {
-  handleAgendaAutoOpen: () => void;
-}
+// interface CalenderProps extends CalendarGridProps {}
 
-const CalendarGrid = (props: CalenderProps) => {
-  const dateValues = processDateValue(props.dateValue);
-  const eventsArray: Event[] | undefined = props.eventData;
+const CalendarGrid = () => {
+  const { appState, appDispatch } = useAppContext();
+  const dateValues = processDateValue(appState.date);
+  const eventsArray: Event[] | undefined = appState.events;
   const calendarDayArray: CalendarDay[] = [];
 
   const getStartDate = (dateValues: DateValues) => {
@@ -92,13 +92,22 @@ const CalendarGrid = (props: CalenderProps) => {
 
   const handleClick = (selectedDate: Date) => {
     const filterDate = new Date(selectedDate);
+    console.log(filterDate);
+
     if (!eventsArray) {
       return;
     }
     const filteredEvents = filterEventsByDate(eventsArray, selectedDate);
-    props.handleAgendaAutoOpen();
-    if (props.handleAgendaUpdate) {
-      props.handleAgendaUpdate(filterDate, filteredEvents);
+
+    appDispatch({
+      type: "TOGGLE_AGENDA",
+      payload: (appState.isAgendaOpen = true),
+    });
+
+    if (appState.isAgendaOpen) {
+      appDispatch({ type: "SET_DATE", payload: selectedDate });
+      appDispatch({ type: "SET_CURRENT_EVENTS", payload: filteredEvents });
+      // props.handleAgendaUpdate(filterDate, filteredEvents);
     }
   };
 

@@ -1,18 +1,22 @@
-import { CalendarEvent } from "../../interfaces/calendarInterfaces";
+import { useAppContext } from "../../hooks/useAppContext";
+import { Event } from "../../interfaces/calendarInterfaces";
 import styled from "styled-components";
 
 interface EventCardProps {
-  event: CalendarEvent;
-  selectEvent: (event: CalendarEvent) => void;
-  handleAddNewEvent: (value: boolean) => void;
+  event: Event;
+  selectEvent: (event: Event) => void;
+  // handleAddNewEvent: (value: boolean) => void;
 }
 
-const EventCard = ({ event, selectEvent, handleAddNewEvent }: EventCardProps) => {
+const EventCard = ({ event, selectEvent }: EventCardProps) => {
+  const { appState, appDispatch } = useAppContext();
   const eventStart = new Date(event.start).toDateString();
   const eventEnd = new Date(event.end).toDateString();
 
-  const handleClick = (event: CalendarEvent) => {
-    handleAddNewEvent(false);
+  const handleClick = (event: Event) => {
+    // handleAddNewEvent(false);
+    appDispatch({ type: "SET_ADD_NEW_EVENT", payload: (appState.isAddNewEvent = false) });
+
     selectEvent(event);
   };
 
